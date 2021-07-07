@@ -1,0 +1,566 @@
+openapi: 3.0.0
+servers:
+  - url: 'localhost:3000'
+info:
+  version: 1.0.0
+  title: Delilah Sprint 3
+  contact:
+    name: Christian Báez
+    email: christiandbaezm@gmail.com
+paths:
+  /productos:
+    get:
+      summary: Traer todos los productos
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: 'OK'
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties: 
+                    id:
+                      type: integer
+                    nombre: 
+                      type: string
+                    precio:  
+                      type: integer
+                    disponible: 
+                      type: string
+                example:
+                - id: 1
+                  nombre: "Vino"
+                  precio: 9000
+                  disponible: "N"
+                - id: 2
+                  nombre: "Cerveza"
+                  precio: 3500
+                  disponible: "Y"
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+    post:
+      summary: Crear un nuevo producto
+      tags:
+      - Endpoints
+      responses:
+        '201':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                nombre: 
+                  type: string
+                precio:  
+                  type: integer
+                disponible: 
+                  type: string
+                  maxLength: 1
+                  description: Valores S o N (si o no)
+                  default: S
+              required:
+                - nombre
+                - precio
+            example:
+                dish_name: Cervecita
+                price: 2500
+  /productos/{id}:
+    get:
+      summary: Producto por ID
+      tags:
+      - Endpoints
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: 'List of dishes'
+          content:
+            application/json:
+              schema:
+                items:
+                  properties: 
+                    id:
+                      type: integer
+                    nombre: 
+                      type: string
+                    precio:  
+                      type: integer
+                    disponible: 
+                      type: string
+                example:
+                - id: 1
+                  nombre: "Vino"
+                  precio: 9000
+                  disponible: "N"
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+        '404':
+          description: Verifique ID
+    put:
+      summary: Actualizar producto por ID
+      tags:
+      - Endpoints
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+        '404':
+          description: Verifique ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties: 
+                  id:
+                    type: integer
+                  nombre: 
+                    type: string
+                  precio:  
+                    type: integer
+                  disponible: 
+                    type: string
+              example:
+              - nombre: "Vino"
+                precio: 10000
+                disponible: "Y"
+    delete:
+      summary: Producto no disponible
+      tags:
+      - Endpoints
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+        '404':
+          description: Verifique ID
+  /usuario:
+    get:
+      summary: Informacion del usuario actual
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: OK 
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  username:
+                    type: string
+                  nombre: 
+                    type: string
+                  email:  
+                    type: string
+                  telefono: 
+                    type: string
+                  direccion: 
+                    type: string  
+                example: 
+                  username: "user"
+                  nombre: "pedro picapiedra"
+                  email: "pp@picapiedra.com"
+                  telefono: "1234567"
+                  direccion: "Piedra Roca" 
+        '403':
+          $ref: '#/components/responses/403NoToken'
+  /usuario/{id}:
+    get:
+      summary: Informacion usuario por ID
+      tags:
+      - Endpoints
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK 
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  username:
+                    type: string
+                  nombre: 
+                    type: string
+                  email:  
+                    type: string
+                  telefono: 
+                    type: string
+                  direccion: 
+                    type: string  
+                example: 
+                  username: "user"
+                  nombre: "pedro picapiedra"
+                  email: "pp@picapiedra.com"
+                  telefono: "1234567"
+                  direccion: "Piedra Roca"
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+        '404':
+          description: Verifique ID
+  /usuario/registro:
+    post:
+      summary: Crear usuario nuevo
+      tags:
+      - Endpoints
+      responses:
+        '201':
+          description: OK
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties: 
+                username:
+                  type: string
+                nombre: 
+                  type: string
+                email:  
+                  type: string
+                telefono: 
+                  type: string
+                direccion: 
+                  type: string
+                contrasena:
+                  type: string
+              required:
+                - username
+                - nombre
+                - email
+                - telefono
+                - direccion
+                - contrasena
+              example: 
+                username: "vilmis"
+                nombre: "Vilma Picapiedra"
+                email: "vp@picapiedra.com"
+                telefono: "1234567"
+                direccion: "Piedra Roca"
+                contrasena: "vilmis"
+      security: []
+  /usuario/login:
+    post:
+      summary: Inicio de sesión
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: 'OK'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties: 
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+              example: 
+                username: "pedropicapiedra"
+                password: "pp"
+      security: []
+  /usuarios:
+    get:
+      summary: Traer todos los usuarios
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: OK 
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                properties: 
+                  username:
+                    type: string
+                  nombre: 
+                    type: string
+                  email:  
+                    type: string
+                  telefono: 
+                    type: string
+                  direccion: 
+                    type: string  
+                example: 
+                  - username: "user"
+                    nombre: "pedro picapiedra"
+                    email: "pp@picapiedra.com"
+                    telefono: "1234567"
+                    direccion: "Piedra Roca"
+                  - username: "vilmis"
+                    nombre: "Vilma Picapiedra"
+                    email: "vp@picapiedra.com"
+                    telefono: "1234567"
+                    direccion: "Piedra Roca"
+                    contrasena: "vilmis"   
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'      
+  /pedido:
+    get:
+      summary: Pedidos usuario actual
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: OK 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Array_pedido'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+    post:
+      summary: Crear nuevo pedido
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: OK 
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+      requestBody:
+        required: true
+        content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nuevo_pedido'
+  /pedido/{id}:
+    put:
+      summary: Actualizar estado del pedido por ID
+      tags:
+      - Endpoints
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+        '404':
+          description: Verificar ID
+      requestBody:
+        required: true
+        description: Usar valores - confirmado, preparando, enviando o entregado 
+        content:
+          application/json:
+            schema:
+              type: object
+              description: "Usar valores - confirmado, preparando, enviando o entregado" 
+              properties:
+                status:
+                  type: string
+                  example: confirmed
+              required:
+                - status
+    delete:
+      summary: Cancelar el pedido
+      tags:
+      - Endpoints
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+        '404':
+          description: Verificar ID
+  /pedidos:
+    get:
+      summary: Todos los pedidos
+      tags:
+      - Endpoints
+      responses:
+        '200':
+          description: OK 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Array_pedido'
+        '401':
+          $ref: '#/components/responses/401NoAutorizado'
+        '403':
+          $ref: '#/components/responses/403NoToken'
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  schemas: 
+    Pedido_producto:
+      properties:
+        nombre:
+          type: string
+          example:
+            "Whiskey"
+        precio:
+          type: integer
+          example:
+            45000
+        cantidad:
+          type: integer
+          example:
+            3
+    Pedido_simple:
+      properties:
+        pedidoID: 
+          type: integer
+          example: 1
+        nombre: 
+          type: string
+          example: "pedro picapiedra"
+        direccion_envio: 
+          type: string
+          example: "Roca piedra 3"
+        telefono: 
+          type: string
+          example: "1234567"
+        total: 
+          type: integer
+          example: 20000
+        estado_pedido: 
+          type: string
+          example: "nuevo"
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pedido_producto'
+          example:
+            - nombre: "Cervecita"
+              precio: 3000
+              cantidad: 5
+            - nombre: "Cerveza"
+              precio: 5000
+              cantidad: 1
+    Array_pedido:
+      type: array
+      items: 
+        $ref: '#/components/schemas/Pedido_simple'
+      example: 
+        - pedidoID: 1
+          nombre: "pedro picapiedra"
+          direccion_envio: "Roca Piedra 7"
+          telephone: "4567891"
+          total: 20000
+          status: "nuevo"
+          items: [
+              {
+                  "name": "Cervecita",
+                  "price": 3000,
+                  "cantidad": 5
+              },
+              {
+                  "name": "Cerveza",
+                  "price": 5000,
+                  "cantidad": 1
+              }
+          ]
+        - orderID: 2
+          nombre: "vilma picapiedra"
+          direccion_envio: "Roca Piedra 4"
+          telefono: "7418529"
+          total: 60000
+          estado_pedido: "nuevo"
+          items: [
+            {
+                "nombre": "Whiskey",
+                "precio": 45000,
+                "cantidad": 1
+            },
+            {
+                "nombre": "Cerveza",
+                "precio": 5000,
+                "cantidad": 3
+            }
+          ]
+    Nuevo_pedido:
+      type: object
+      properties:
+        direccion_envio:
+          type: string
+          example: "Roca Piedra 2"
+        items:
+          properties:
+            id:
+              type: integer
+            cantidad:
+              type: integer
+          example:
+            - id : 3
+              cantidad: 2
+            - id: 5
+              cantidad: 1
+            - id : 1
+              cantidad: 2
+      required:
+        - direccion_envio
+        - items
+  responses:
+    401NoAutorizado:
+      description: Acceso no autorizado
+    403NoToken:
+      description: Token no encontrado
+security:
+  - bearer: []
+tags:
+  - name: Endpoints
+    description: Delilah endpoints
